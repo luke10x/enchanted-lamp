@@ -15,3 +15,7 @@ shell-nginx:
 
 shell-wordpress:
 	docker exec -it enchantedlamp_wordpress_1 bash
+
+process-map-wordpress:
+	@tools/process-map.sh enchantedlamp_wordpress_1
+
