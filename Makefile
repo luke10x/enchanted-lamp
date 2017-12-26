@@ -19,3 +19,5 @@ shell-wordpress:
 process-map-wordpress:
 	@tools/process-map.sh enchantedlamp_wordpress_1
 
+wordpress-dbg:
+	docker build -t wordpress:fpm -f ./docker/wordpress/Dockerfile ./docker/wordpress
