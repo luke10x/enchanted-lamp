@@ -11,6 +11,12 @@ wordpress-get-php-src:
 	mkdir -p src
 	docker exec enchantedlamp_wordpress_1 cat /usr/src/php.tar.xz | xz -dc | tar -C ./src -xvf - 
 
+wordpress-reset-volume:
+	docker-compose stop && \
+	docker-compose rm && \
+	docker volume rm $$(docker volume ls -q) && \
+	docker-compose up -d --build
+
 mysql-dump:
 	docker exec enchantedlamp_mysql_1 \
 	sh -c \
@@ -54,6 +60,15 @@ mysql-lock-post:
 	send "ROLLBACK;\rEXIT\r" ;\
 	expect -exact "Bye" ;\
 	' $(LOCK_SQL) | expect
+
+client-edit-post:
+	@echo 'Point your VNC client to *:15900 (Password: "secret")'
+	@echo Login and edit post 
+	@docker-compose run \
+		-v '$(PWD)/docker/client/scripts:/scripts' \
+		client \
+		php /scripts/edit-post.php 
+	@echo Done
 
 process-map-wordpress:
 	@tools/process-map.sh enchantedlamp_wordpress_1
