@@ -39,27 +39,7 @@ mysql:
 
 LOCK_SQL = 'UPDATE wp_posts SET post_content=\"Pending content...\" WHERE id=1'
 mysql-lock-post:
-	@printf ' ;\
-	set timeout 310 ;\
-	trap { ;\
-		send "ROLLBACK;\rEXIT\r" ;\
-		expect -exact "Bye" ;\
-		exit 0 ;\
-	} SIGINT ;\
-	spawn make mysql ;\
-	;\
-	expect -exact "mysql>" ;\
-	send "START TRANSACTION;\r" ;\
-	expect -exact "mysql>" ;\
-	send "%s;\r" ;\
-	expect -exact "mysql>" ;\
-	send_user "RECORD BLOCKED (TO EXIT: C^ OR JUST WAIT)" ;\
-	send "\r" ;\
-	sleep 300 ;\
-	expect -exact "mysql>" ;\
-	send "ROLLBACK;\rEXIT\r" ;\
-	expect -exact "Bye" ;\
-	' $(LOCK_SQL) | expect
+	./tools/blockdb.exp
 
 client-edit-post:
 	@echo 'Point your VNC client to *:15900 (Password: "secret")'
