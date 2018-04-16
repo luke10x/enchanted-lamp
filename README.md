@@ -1,9 +1,43 @@
-# A Showcase of LAMP Architecture
+# Debugging PHP with GDB
 
 At its center it has a PHP application, which is a simple Wordpress site,
 and its supporting infrastructure.
 
-## Links:
+## Getting started
 
-- The public [website](http://0.0.0.0:8080);
-- Wordpress [admin panel](http://0.0.0.0:8080/wp-admin/), login with `root`:`password`;
+Lock the DB with:
+
+    make mysql-lock-post
+
+Try to edit the locked post:
+
+    make client-edit-post
+
+Check which PHP worker is processing the locked connection:
+
+    make wordpress-connected-to | grep ESTA
+
+It will print something like
+
+    tcp        0      0 172.19.0.5:41128        172.19.0.6:3306         ESTABLISHED 25889/php-fpm: pool 
+    tcp6       8      0 172.19.0.5:9000         172.19.0.2:37314        ESTABLISHED 25889/php-fpm: pool
+
+Which means that worker Pid is `25889`.
+So we can connect the debugger:
+
+    sudo gdb -p 25889
+
+Then in the `(gdb)` prompt type:
+
+    source .gdbinit
+
+Current backtrace will be printed....
+
+## VNC client:
+
+Web URLs are not accessed from outside of the Docker network.
+However, it is possible to connect to the chrome container with VNC client.
+From there it is possible to open the following URLs:
+Connect t
+- The public [website](http://wordpress-sandbox.discoverops.com);
+- Wordpress [admin panel](http://wordpress-sandbox.discoverops.com/wp-admin/), login with `root`:`password`;
