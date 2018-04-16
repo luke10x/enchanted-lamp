@@ -13,19 +13,23 @@ $capabilities = DesiredCapabilities::chrome();
 $driver = RemoteWebDriver::create($host, $capabilities, 5000);
 set_error_handler(function ($errno , $errstr, $file, $line) use ($driver) {
     echo "$errno: $errstr at $file:$line";
+    sleep(5);
     $driver->quit(); 
+    exit(1);
 });
 set_exception_handler(function ($ex) use ($driver) {
     echo "{$ex->getCode()}: {$ex->getMessage()}";
     echo $ex->getTraceAsString();
+    sleep(5);
     $driver->quit(); 
+    exit(1);
 });
 
 echo "> When I open Wordpress login screen\n";
 $driver->get('http://wordpress-sandbox.discoverops.com/wp-admin');
 echo ">  And I login with username and password\n";
-$driver->findElement(By::id('user_login'))->sendKeys('root');
-$driver->findElement(By::id('user_pass'))->sendKeys('password')
+$driver->findElement(By::id('user_login'))->click()->sendKeys('root');
+$driver->findElement(By::id('user_pass'))->click()->sendKeys('password')
         ->submit(); 
 
 $header = $driver
@@ -51,8 +55,10 @@ $driver->findElement(By::id('content_ifr'))
     ->sendKeys('hello');
 
 echo ">  And I publish the post\n";
-$driver->findElement(By::id('publish'))
-    ->click();
+$driver->executeScript("window.scrollTo(0, 0);");
+$publishButton = $driver->findElement(By::id('publish'));
+$publishButton->click();
+
 $message = $driver
     ->findElement(By::id('message'))
     ->findElement(By::tagName('p'));
