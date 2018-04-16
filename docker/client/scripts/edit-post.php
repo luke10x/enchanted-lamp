@@ -10,7 +10,7 @@ require_once('/vendor/autoload.php');
 // start Chrome with 5 second timeout
 $host = 'http://selenium-hub:4444/wd/hub';
 $capabilities = DesiredCapabilities::chrome();
-$driver = RemoteWebDriver::create($host, $capabilities, 5000);
+$driver = RemoteWebDriver::create($host, $capabilities, 5000, 330*1000);
 set_error_handler(function ($errno , $errstr, $file, $line) use ($driver) {
     echo "$errno: $errstr at $file:$line";
     sleep(5);
@@ -59,6 +59,11 @@ $driver->executeScript("window.scrollTo(0, 0);");
 $publishButton = $driver->findElement(By::id('publish'));
 $publishButton->click();
 
+$driver->wait(330)->until(
+    WebDriverExpectedCondition::presenceOfAllElementsLocatedBy(
+        By::id('message')
+    )
+);
 $message = $driver
     ->findElement(By::id('message'))
     ->findElement(By::tagName('p'));
