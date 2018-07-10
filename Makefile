@@ -33,11 +33,10 @@ shell-mysql:
 	docker exec -it enchantedlamp_mysql_1 bash
 
 mysql:
-	docker exec -it enchantedlamp_mysql_1 \
+	docker exec -it enchantedlamp_mysql-backend_1 \
 	sh -c \
 	'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" wordpress'
 
-LOCK_SQL = 'UPDATE wp_posts SET post_content=\"Pending content...\" WHERE id=1'
 mysql-lock-post:
 	./tools/blockdb.exp
 

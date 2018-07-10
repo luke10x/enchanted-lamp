@@ -3,7 +3,14 @@
 At its center it has a PHP application, which is a simple Wordpress site,
 and its supporting infrastructure.
 
-## Getting started
+## Sandbox Environment
+
+The environment is managed by Docker Compose, therefore use `docker-compose up -d`
+to start it, it will start Nginx, php-fpm and MySql services.
+
+Use `docker-compose down` to shutdown the environment.
+
+## Demo 
 
 Lock the DB with:
 

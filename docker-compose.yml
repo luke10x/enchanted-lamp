@@ -25,6 +25,35 @@ services:
           - wordpress-sandbox.discoverops.com
 
   mysql:
+    image: pataquets/mysql-proxy
+    depends_on:
+      - mysql-backend
+    command: >
+      --keepalive --log-level=debug
+      --proxy-backend-addresses=mysql-backend
+      --proxy-lua-script=/usr/proxy-script.lua
+      --plugins=proxy
+    volumes:
+      - ./conf/proxy-script.lua:/usr/proxy-script.lua
+      - type: volume
+        source: querylog
+        target: /log
+        read_only: false 
+        volume:
+          nocopy: false
+    networks:
+      - wordpress-infra
+
+  mysql-logger:
+    image: alpine
+    restart: always
+    depends_on:
+      - mysql
+    volumes:
+      - querylog:/log:ro
+    command: 'tail -f /log/query.log'
+
+  mysql-backend:
     image: mysql:5.7
     restart: always
     environment:
@@ -62,6 +91,7 @@ services:
 
 volumes:
   www:
+  querylog:
 
 networks:
   wordpress-infra:
