@@ -28,7 +28,12 @@ set_exception_handler(function ($ex) use ($driver) {
 echo "> When I open Wordpress login screen\n";
 $driver->get('http://wordpress-sandbox.discoverops.com/wp-admin');
 echo ">  And I login with username and password\n";
-$driver->findElement(By::id('user_login'))->click()->sendKeys('root');
+$loginEl = $driver->findElement(By::id('user_login'))->click();
+$driver->wait(3, 500)
+    ->until(WebDriverExpectedCondition::presenceOfElementLocated(
+        By::cssSelector('#user_login:focus')
+    ));
+$loginEl->sendKeys('root');
 $driver->findElement(By::id('user_pass'))->click()->sendKeys('password')
         ->submit(); 
 
