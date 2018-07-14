@@ -5,7 +5,7 @@ trap {
         send "ROLLBACK;\rEXIT\r"; expect -exact "Bye"; exit 0
 } SIGINT
 
-spawn docker exec -it enchantedlamp_mysql_1 sh -c "exec mysql -uroot -p\"\$MYSQL_ROOT_PASSWORD\" wordpress"
+spawn docker exec -it enchantedlamp_mysql-backend_1 sh -c "exec mysql -uroot -p\"\$MYSQL_ROOT_PASSWORD\" wordpress"
 expect -exact "mysql>"
 send "START TRANSACTION;\r"
 expect -exact "mysql>"
