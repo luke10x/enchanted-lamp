@@ -10,6 +10,10 @@ services:
       WORDPRESS_DB_PASSWORD: example
     volumes:
       - www:/var/www/html:rw
+    ulimits:
+      core:
+        soft: -1 
+        hard: -1
     networks:
       - wordpress-infra
 

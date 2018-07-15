@@ -68,3 +68,5 @@ RUN /bin/sh -c set -ex; \
     docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
     docker-php-ext-install gd mysqli opcache
 
+RUN mkdir -p /tmp/cores && chmod a+rwx /tmp/cores
+COPY zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf

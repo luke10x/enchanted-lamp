@@ -38,7 +38,20 @@ Then in the `(gdb)` prompt type:
 
     source .gdbinit
 
-Current backtrace will be printed....
+Current backtrace will be printed...
+
+## Generate core dumps on segfaults
+
+Cores are dumped by kernel, therefore the kernel
+needs to be configured on how and where to dump cores:
+
+    echo '/tmp/cores/core.%e.%p.%t' > /proc/sys/kernel/core_pattern
+    echo 0 > /proc/sys/kernel/core_uses_pid
+    echo 1 > /proc/sys/fs/suid_dumpable
+
+Also Selinux must allow it:
+
+    getsebool allow_daemons_dump_core
 
 ## VNC client:
 
